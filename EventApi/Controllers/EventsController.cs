@@ -1,4 +1,5 @@
 ﻿using EventApi.Data.Contexts;
+using EventApi.Entities;
 using EventApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,9 @@ namespace EventApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvents(string id)
+        public async Task<IActionResult> GetEvents() 
         {
-            var events = await _context.Events.FindAsync(id);
+            var events = await _context.Events.FindAsync();
             if (events == null)
             {
                 return NotFound();
@@ -27,11 +28,14 @@ namespace EventApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Event>> CreateEvent(Event newEvent)
+        public async Task<IActionResult> CreateEvent (EventEntity ev)
         {
-            _context.Events.Add(newEvent);
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
+            _context.Events.Add(ev);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetEvents), new { id = newEvent.EventId }, newEvent);
+            return CreatedAtAction(nameof(GetEvents), new { id = ev.EventId }, ev);
         }
 
         [HttpPut("{id}")]
@@ -52,6 +56,5 @@ namespace EventApi.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
     }
 }
