@@ -8,7 +8,6 @@ namespace EventApi.Entities
         public string LocationId { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        public string Name { get; set; } = null!;
 
         public string Address { get; set; } = null!;
 

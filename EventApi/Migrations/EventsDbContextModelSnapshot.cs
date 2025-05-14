@@ -54,7 +54,7 @@ namespace EventApi.Migrations
 
                     b.HasKey("EventId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 #pragma warning restore 612, 618
         }
