@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace EventApi.Entities
+namespace EventApi.Data.Entities
 {
     public class EventEntity
     {
@@ -23,13 +23,14 @@ namespace EventApi.Entities
         public int Quantity { get; set; }
         public int SoldQuantity { get; set; }
 
-        public int CategoryId { get; set; }
-        public CategoryEntity Category { get; set; } = null!;
-
-        public int LocationId { get; set; }
-        public LocationEntity Location { get; set; } = null!;
-
-        public int StatusId { get; set; }
-        public StatusEntity Status { get; set; } = null!;
+        [ForeignKey(nameof(Category))]
+        public string CategoryId { get; set; } = null!;
+        public virtual CategoryEntity Category { get; set; } = null!;
+        [ForeignKey(nameof(Location))]
+        public string LocationId { get; set; } =null!;
+        public virtual LocationEntity Location { get; set; } = null!;
+        [ForeignKey(nameof(Status))]
+        public string StatusId { get; set; } = null!;
+        public virtual StatusEntity Status { get; set; } = null!;
     }
 }

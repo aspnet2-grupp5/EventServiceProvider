@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventApi.Entities
+namespace EventApi.Data.Entities
 {
     public class StatusEntity
     {
@@ -8,7 +8,7 @@ namespace EventApi.Entities
         public string StatusId { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        public string Status { get; set; } = null!;
+        public string Statuses { get; set; } = null!;
 
         public ICollection<EventEntity> Events { get; set; } = new List<EventEntity>();
     }

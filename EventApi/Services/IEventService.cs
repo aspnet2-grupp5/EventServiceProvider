@@ -1,10 +1,18 @@
 ﻿using EventApi.Data.Contexts;
-using EventApi.Entities;
+using EventApi.Data.Entities;
 using EventApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventApi.Services
 {
+    public interface IEventService
+    {
+        Task<EventEntity?> CreateEventAsync(AddEventFormData formData);
+        Task<bool> UpdateEventAsync(string id, EditEventformData formData);
+        Task<EventEntity?> GetEventByIdAsync(string id);
+        Task<bool> DeleteEventAsync(string id);
+    }
+
     public class EventService : IEventService
     {
         private readonly EventsDbContext _context;
@@ -13,7 +21,6 @@ namespace EventApi.Services
         {
             _context = context;
         }
-
         public async Task<bool> CreateEventAsync(AddEventFormData formData)
         {
             var newEvent = new EventEntity
@@ -57,7 +64,8 @@ namespace EventApi.Services
         public async Task<bool> DeleteEventAsync(string id)
         {
             var ev = await _context.Events.FindAsync(id);
-            if (ev == null) return false;
+            if (ev == null) 
+                return false;
 
             _context.Events.Remove(ev);
             await _context.SaveChangesAsync();

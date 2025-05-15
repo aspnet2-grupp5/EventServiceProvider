@@ -1,4 +1,4 @@
-﻿using EventApi.Entities;
+﻿using EventApi.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventApi.Data.Contexts

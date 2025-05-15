@@ -1,6 +1,6 @@
 ﻿using EventApi.Data.Contexts;
+using EventApi.Data.Entities;
 using EventApi.Documentation;
-using EventApi.Entities;
 using EventApi.Models;
 using EventApi.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -15,19 +15,24 @@ namespace EventApi.Controllers
     [ApiController]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public class EventsController(IEventService eventService, EventsDbContext eventsDbContext) : ControllerBase
+    public class EventsController : ControllerBase
     {
-        private readonly EventsDbContext _context = eventsDbContext;
-        private readonly IEventService _eventService = eventService;
+        private readonly IEventService _eventService;
+
+        public EventsController(IEventService eventService)
+        {
+            _eventService = eventService;
+        }
+}
 
         [Authorize]
         [HttpGet]
         [SwaggerOperation(Summary = "Get all Events")]
         [SwaggerResponse(200, "List of events", typeof(IEnumerable<EventEntity>))]
         [SwaggerResponse(404, "No events found")]
-        public async Task<IActionResult> GetEvents() 
+        public async Task<IActionResult> GetEvents()
         {
-            var events = await _context.Events.ToListAsync();
+            var events = await _eventService.GetAllEventsAsync();
             if (events == null || !events.Any())
             {
                 return NotFound();
@@ -41,31 +46,54 @@ namespace EventApi.Controllers
         [SwaggerRequestExample(typeof(AddEventFormData), typeof(AddEventFormExample))]
         [SwaggerResponse(201, "Event created", typeof(EventEntity))]
         [SwaggerResponse(400, "Invalid model state")]
-        public async Task<IActionResult> CreateEvent([FromForm] AddEventFormData formData)
+        public async Task<EventEntity?> CreateEventAsync(AddEventFormData formData)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(formData);
+            var newEvent = new EventEntity
+            {
+                EventId = Guid.NewGuid().ToString(),
+                EventTitle = formData.EventTitle,
+                Description = formData.Description,
+                Date = formData.Date,
+                Price = formData.Price,
+                Quantity = formData.Quantity,
+                SoldQuantity = 0,
+                CategoryId = formData.CategoryId,
+                LocationId = formData.LocationId,
+                StatusId = formData.StatusId
+            };
 
-            var result = await _eventService.CreateEventAsync(formData); // your own service
-            if (result == null)
-                return BadRequest("Failed to create event");
-
-            return CreatedAtAction(nameof(GetEvents), new { id = result.EventId }, result);
         }
+
 
         [HttpPut("{id}")]
         [SwaggerOperation(Summary = "Update an Event")]
         [SwaggerResponse(204, "Event updated")]
         [SwaggerResponse(400, "Invalid model state")]
-        public async Task<IActionResult> UpdateEvent(string id, [FormBody])
+        public async Task<IActionResult> UpdateEvent(string id, [FromForm] EditEventformData formData)
         {
-            if (id != ev.EventId) 
-                return BadRequest();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            _context.Entry(ev).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            var result = await _eventService.UpdateEventAsync(id, formData);
+            if (!result)
+                return NotFound();
+
             return NoContent();
         }
+
+        [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Get event by ID")]
+        [SwaggerResponse(200, "Event found", typeof(EventEntity))]
+        [SwaggerResponse(404, "Event not found")]
+        public async Task<IActionResult> GetEventById(string id)
+        {
+            var ev = await _eventService.GetEventByIdAsync(id);
+            if (ev == null)
+                return NotFound();
+
+            return Ok(ev);
+        }
+
 
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Delete an Event")]
@@ -73,12 +101,10 @@ namespace EventApi.Controllers
         [SwaggerResponse(404, "Event not found")]
         public async Task<IActionResult> DeleteEvent(string id)
         {
-            var ev = await _context.Events.FindAsync(id);
-            if (ev == null) 
+            var result = await _eventService.DeleteEventAsync(id);
+            if (!result)
                 return NotFound();
 
-            _context.Events.Remove(ev);
-            await _context.SaveChangesAsync();
             return NoContent();
         }
     }

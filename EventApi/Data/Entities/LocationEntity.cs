@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventApi.Entities
+namespace EventApi.Data.Entities
 {
     public class LocationEntity
     {
