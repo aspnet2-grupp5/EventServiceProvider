@@ -31,7 +31,7 @@ namespace EventApi.Factories
                 Status = new Status
                 {
                     StatusId = entity.Status.StatusId,
-                    Statuses = entity.Status.Statuses
+                    StatusName = entity.Status.StatusName
                 }
             };
         }
@@ -50,7 +50,7 @@ namespace EventApi.Factories
                     SoldQuantity = 0,
                     CategoryId = formData.CategoryName,
                     LocationId = formData.Address,
-                    StatusId = formData.Statuses,
+                    StatusId = formData.StatusName,
                 };
         }
         public static EventEntity ToEntity(EditEventformData formdata)
@@ -68,7 +68,7 @@ namespace EventApi.Factories
                     SoldQuantity = 0,
                     CategoryId = formdata.CategoryName,
                     LocationId = formdata.Address,
-                    StatusId = formdata.Statuses,
+                    StatusId = formdata.StatusName,
                 };
         }
     }

@@ -14,9 +14,9 @@ namespace EventApi.Documentation
                 Date = DateTime.UtcNow.AddDays(30),
                 Price = 50.00m,
                 Quantity = 100,
-                CategoryId = 1,
-                LocationId = 1,
-                StatusId = 1
+                CategoryName = "Health",
+                Address = "Solnavägen 5B",
+                StatusName = "Past",
             };
         }
     }

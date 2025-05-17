@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace EventApi.Models
+﻿namespace EventApi.Models
 {
     public class Event
     {
@@ -11,9 +9,12 @@ namespace EventApi.Models
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public int SoldQuantity { get; set; }
-        public Category Category { get; set; } = null!;
-        public Location Location { get; set; } = null!;
-        public Status Status { get; set; } = null!;
+
+        public string CategoryName { get; set; } = null!;
+        public string LocationName { get; set; } = null!;
+        public string StatusName { get; set; } = null!;
+        public Category? Category { get; internal set; }
+        public Location? Location { get; internal set; }
+        public Status? Status { get; internal set; }
     }
-    
 }

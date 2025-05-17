@@ -1,4 +1,6 @@
 using EventApi.Data.Contexts;
+using EventApi.Repositories;
+using EventApi.Services;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Filters;
@@ -19,11 +21,18 @@ builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 builder.Services.AddDbContext<EventsDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IStatusRepository, StatusRepository>();
+
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IStatusService, StatusService>();
+
 var app = builder.Build();
 
 app.MapOpenApi();
 app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseAuthentication();
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()

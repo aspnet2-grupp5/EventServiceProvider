@@ -23,6 +23,6 @@ namespace EventApi.Models
         public string Address { get; set; } = null!;
 
         [Required] 
-        public string Statuses { get; set; } = null!;
+        public string StatusName { get; set; } = null!;
     }
 }

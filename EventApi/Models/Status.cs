@@ -7,6 +7,6 @@ namespace EventApi.Models
         [Required]
         public string StatusId { get; set; } = null!;
         [Required]
-        public string Statuses { get; set; } = null!;
+        public string StatusName { get; set; } = null!;
     }
 }

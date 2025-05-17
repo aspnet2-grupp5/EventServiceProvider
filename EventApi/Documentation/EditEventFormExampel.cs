@@ -15,13 +15,11 @@ namespace EventApi.Documentation
                 Date = DateTime.UtcNow.AddDays(30),
                 Price = 75.00m,
                 Quantity = 50,
-                CategoryId = 2,
-                LocationId = 2,
-                StatusId = 2
+                CategoryName = "Music",
+                Address = "Globen",
+                StatusName= "Active",
             };
         }
     }
-    {
-
     }
-}
+
