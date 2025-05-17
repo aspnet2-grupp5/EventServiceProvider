@@ -5,8 +5,6 @@ namespace EventApi.Models
     public class AddEventFormData
     {
         [Required]
-        public string EventId { get; set; } = null!;
-        [Required]
         public string EventTitle { get; set; } = null!;
 
         [Required]

@@ -26,13 +26,14 @@ public class EventRepository : IEventRepository
         _dbSet = _context.Set<EventEntity>();
     }
 
-    public async Task<IEnumerable<EventEntity>> GetAllEventsAsync()
+    public virtual async Task<IEnumerable<EventEntity>> GetAllEventsAsync()
     {
-        return await _dbSet
+        var entities = await _dbSet
             .Include(e => e.Category)
             .Include(e => e.Location)
             .Include(e => e.Status)
             .ToListAsync();
+        return entities;
     }
 
     public async Task<EventEntity?> GetByIdAsync(string id)
@@ -43,14 +44,10 @@ public class EventRepository : IEventRepository
             .Include(e => e.Status)
             .FirstOrDefaultAsync(e => e.EventId == id);
     }
-    public async Task<IEnumerable<EventEntity>> GetAsync(Expression<Func<EventEntity, bool>> predicate)
+    public virtual async Task<IEnumerable<EventEntity>> GetAsync(Expression<Func<EventEntity, bool>> predicate)
     {
-        return await _dbSet
-            .Where(predicate)
-            .Include(e => e.Category)
-            .Include(e => e.Location)
-            .Include(e => e.Status)
-            .ToListAsync();
+        var entities = await _dbSet.ToListAsync();
+        return entities;
     }
     public Task<IEnumerable<EventEntity>> GetByCategoryIdAsync(string categoryId)
     {
@@ -71,12 +68,18 @@ public class EventRepository : IEventRepository
     }
     public async Task<bool> AddAsync(EventEntity entity)
     {
+        if (entity == null)
+            return false;
+
         await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
         return true;
     }
     public async Task<bool> UpdateAsync(EventEntity entity)
     {
+        if (entity == null)
+            return false;
+
         _dbSet.Update(entity);
         await _context.SaveChangesAsync();
         return true;

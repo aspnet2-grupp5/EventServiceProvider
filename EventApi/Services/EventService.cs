@@ -13,14 +13,9 @@ public interface IEventService
     Task<bool> UpdateAsync(EditEventformData formData);
     Task<bool> DeleteByIdAsync(string id);
 }
-public class EventService : IEventService
+public class EventService(IEventRepository eventRepository) : IEventService
 {
-    private readonly IEventRepository _eventRepository;
-
-    public EventService(IEventRepository eventRepository)
-    {
-        _eventRepository = eventRepository;
-    }
+    private readonly IEventRepository _eventRepository = eventRepository;
 
     public async Task<IEnumerable<Event>> GetAllEventsAsync()
     {

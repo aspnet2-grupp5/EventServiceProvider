@@ -11,14 +11,9 @@ namespace EventApi.Controllers
     [ApiController]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public class EventsController : ControllerBase
+    public class EventsController(IEventService eventService) : ControllerBase
     {
-        private readonly IEventService _eventService;
-
-        public EventsController(IEventService eventService)
-        {
-            _eventService = eventService;
-        }
+        private readonly IEventService _eventService = eventService;
 
         [Authorize(Roles ="Member,Admin")]
         [HttpGet]
@@ -48,18 +43,18 @@ namespace EventApi.Controllers
 
             var result = await _eventService.AddAsync(formData);
             return result
-                ? Ok(result)
+                ? Ok()
                 : BadRequest();
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes("multipart/form-data")]
         [SwaggerOperation(Summary = "Update an Event")]
         [SwaggerRequestExample(typeof(EditEventformData), typeof(EditEventFormExampel))]
         [SwaggerResponse(200, "Event updated", typeof(Event))]
         [SwaggerResponse(400, "Invalid model state")]
-        public async Task<IActionResult> UpdateEvent(string id, [FromForm] EditEventformData formData)
+        public async Task<IActionResult> UpdateEvent([FromForm] EditEventformData formData)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
