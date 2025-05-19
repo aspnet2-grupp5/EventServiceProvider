@@ -5,7 +5,7 @@ namespace EventApi.Data.Entities
     public class CategoryEntity
     {
         [Key]
-        public string CategoryId { get; set; } = Guid.NewGuid().ToString();
+        public string CategoryId { get; set; } = null!;
 
         [Required]
         public string CategoryName { get; set; } = null!;

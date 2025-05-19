@@ -5,7 +5,7 @@ namespace EventApi.Data.Entities
     public class LocationEntity
     {
         [Key]
-        public string LocationId { get; set; } = Guid.NewGuid().ToString();
+        public string LocationId { get; set; } = null!;
 
         [Required]
 

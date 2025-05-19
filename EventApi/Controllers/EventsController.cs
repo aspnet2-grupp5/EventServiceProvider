@@ -1,5 +1,6 @@
 ﻿using EventApi.Documentation;
 using EventApi.Models;
+using EventApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -11,9 +12,10 @@ namespace EventApi.Controllers
     [ApiController]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public class EventsController(IEventService eventService) : ControllerBase
+    public class EventsController(IEventService eventService, IStatusService statusService) : ControllerBase
     {
         private readonly IEventService _eventService = eventService;
+        private readonly IStatusService _statusService = statusService;
 
         [Authorize(Roles ="Member,Admin")]
         [HttpGet]
@@ -79,6 +81,18 @@ namespace EventApi.Controllers
 
             return Ok(ev);
         }
+        [HttpGet("{statusId}")]
+        public async Task<IActionResult> GetStatusByIdAsync(string statusId)
+        {
+            var status = await _statusService.GetStatusByIdAsync(statusId);
+            if (status == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(status);
+        }
+
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]

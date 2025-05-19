@@ -11,6 +11,16 @@ namespace EventApi.Data.Contexts
         public DbSet<StatusEntity> Statuses { get; set; }
         public DbSet<MemberEntity> Members { get; set; }
         public DbSet<AdminEntity> Admins { get; set; }
-    }
     
-}
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<StatusEntity>().HasData(
+                new StatusEntity { StatusId = "1", StatusName = "Active" },
+                new StatusEntity { StatusId = "2", StatusName = "Past" },
+                new StatusEntity { StatusId = "3", StatusName = "Draft" }
+            );
+        }
+    }
+    }

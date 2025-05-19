@@ -14,9 +14,9 @@ namespace EventApi.Factories
                 EventTitle = entity.EventTitle,
                 Description = entity.Description,
                 Date = entity.Date,
-                Price = entity.Price,
-                Quantity = entity.Quantity,
-                SoldQuantity = entity.SoldQuantity,
+                Price = (decimal)entity.Price,
+                Quantity = (int)entity.Quantity,
+                SoldQuantity = (int)entity.SoldQuantity,
 
                 Category = new Category
                 {
