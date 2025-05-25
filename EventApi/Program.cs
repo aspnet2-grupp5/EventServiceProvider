@@ -1,5 +1,6 @@
 using EventApi.Data.Contexts;
 using EventApi.Repositories;
+using EventApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,8 @@ builder.Services.AddDbContext<EventsDbContext>(options =>
 builder.Services.AddGrpc();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IStatusRepository, StatusRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ILocationRepository, LocationRepository>(); 
 
 //builder.Services.AddScoped<IEventService, EventService>();
 //builder.Services.AddScoped<IStatusService, StatusService>();
@@ -42,7 +45,9 @@ var app = builder.Build();
 
 
 app.MapGrpcService<EventService>();
-//app.MapGrpcService<StatusService>();
+app.MapGrpcService<CategoryService>();
+app.MapGrpcService<StatusService>();
+app.MapGrpcService<LocationService>();
 
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 

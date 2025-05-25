@@ -19,18 +19,30 @@ service EventProto {
     rpc GetEventsByStatus (StatusIdRequest) returns (GetAllEventsReply);
 }
 
+service StatusProto {
+    rpc GetAllStatuses (google.protobuf.Empty) returns (GetAllStatusesReply);
+}
+
+service CategoryProto {
+    rpc GetAllCategories (google.protobuf.Empty) returns (GetAllCategoriesReply);
+}
+service LocationProto {
+    rpc GetAllLocations (google.protobuf.Empty) returns (GetAllLocationsReply);
+}
+
 
 message Event {
 	string EventId = 1;
     string EventTitle = 2;
-    string Description = 3;
-    google.protobuf.Timestamp Date = 4;
-    double Price = 5;
-    int32 Quantity = 6;
-    int32 SoldQuantity = 7;
-    Category Category = 8;
-    Location Location = 9;
-    Status Status = 10;
+    string EventImage = 3;
+    string Description = 4;
+    google.protobuf.Timestamp Date = 5;
+    double Price = 6;
+    int32 Quantity = 7;
+    int32 SoldQuantity = 8;
+    Category Category = 9;
+    Location Location = 10;
+    Status Status = 11;
 }
 
 message GetAllEventsReply {
@@ -72,4 +84,13 @@ message LocationIdRequest {
 }
 message StatusIdRequest {
     string StatusId = 1;
+}
+message GetAllStatusesReply {
+    repeated Status status = 1;
+}
+message GetAllCategoriesReply {
+    repeated Category category = 1;
+}
+message GetAllLocationsReply {
+    repeated Location location = 1;
 }

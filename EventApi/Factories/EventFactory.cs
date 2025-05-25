@@ -1,5 +1,4 @@
 ﻿using EventApi.Data.Entities;
-using EventApi.Models;
 using EventApi.Protos;
 using Google.Protobuf.WellKnownTypes;
 
@@ -14,6 +13,7 @@ namespace EventApi.Factories
             {
                 EventId = entity.EventId,
                 EventTitle = entity.EventTitle,
+                EventImage = entity.Image ?? string.Empty,
                 Description = entity.Description,
                 Date = entity.Date.HasValue ? Timestamp.FromDateTime(entity.Date.Value.ToUniversalTime()) : new Timestamp(),
                 Price = entity.Price.HasValue ? (double)entity.Price.Value : 0.0,
@@ -47,6 +47,7 @@ namespace EventApi.Factories
                 {
                     EventId = eventRequest.EventId,
                     EventTitle = eventRequest.EventTitle,
+                    Image = eventRequest.EventImage ?? string.Empty,
                     Description = eventRequest.Description,
                     Date = eventRequest.Date.ToDateTime(),
                     Price = (decimal) eventRequest.Price,
@@ -57,24 +58,6 @@ namespace EventApi.Factories
                     StatusId = eventRequest.Status.StatusId,
                 };
         }
-        //public static EventEntity ToEntity(EditEventformData formdata)
-        //{
-        //    return formdata == null
-        //        ? null!
-        //        : new EventEntity
-        //        {
-        //            EventId = formdata.EventId,
-        //            EventTitle = formdata.EventTitle,
-        //            Description = formdata.Description,
-        //            Date = formdata.Date,
-        //            Price = formdata.Price,
-        //            Quantity = formdata.Quantity,
-        //            SoldQuantity = 0,
-        //            CategoryId = formdata.CategoryName,
-        //            LocationId = formdata.Address,
-        //            StatusId = formdata.StatusName,
-        //        };
-        //}
     }
 
 }

@@ -1,56 +1,64 @@
-﻿//using EventApi.Models;
-//using EventApi.Repositories;
+﻿using EventApi.Factories;
+using EventApi.Protos;
+using EventApi.Repositories;
+using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 
-//namespace EventApi.Services
-//{
-//    public interface IStatusService
-//    {
-//        Task<IEnumerable<StatusModel>> GetAllStatusesAsync();
-//        Task<StatusModel?> GetStatusByIdAsync(string id);
-//        Task<StatusModel?> GetStatusByNameAsync(string statusName);
-//    }
+namespace EventApi.Services
+{
+    public interface IStatusService
+    {
+        Task<GetAllStatusesReply> GetAllStatuses (Empty request, ServerCallContext context);
+    }
 
-//    public class StatusService : IStatusService
-//    {
-//        private readonly IStatusRepository _statusRepository;
+    public class StatusService : StatusProto.StatusProtoBase,IStatusService
+    {
+        private readonly IStatusRepository _statusRepository;
 
-//        public StatusService(IStatusRepository statusRepository)
-//        {
-//            _statusRepository = statusRepository;
-//        }
+        public StatusService(IStatusRepository statusRepository)
+        {
+            _statusRepository = statusRepository;
+        }
 
-//        public async Task<IEnumerable<StatusModel>> GetAllStatusesAsync()
-//        {
-//            var entities = await _statusRepository.GetAllAsync();
-//            return entities.Select(e => new StatusModel
-//            {
-//                StatusId = e.StatusId,
-//                StatusName = e.StatusName
-//            });
-//        }
+        public override async Task<GetAllStatusesReply> GetAllStatuses(Empty request, ServerCallContext context)
+        {
 
-//        public async Task<StatusModel?> GetStatusByIdAsync(string id)
-//        {
-//            var entity = await _statusRepository.GetByIdAsync(id);
-//            if (entity == null) return null;
+            var entities = await _statusRepository.GetAllAsync(
+            orderByDescending: false,
+                sortBy: x => x.StatusName,
+                filterBy: null
+                
+             );
 
-//            return new StatusModel
-//            {
-//                StatusId = entity.StatusId,
-//                StatusName = entity.StatusName
-//            };
-//        }
+            var statuses = entities.Select(StatusFactory.ToModel).ToList();
+            var reply = new GetAllStatusesReply();
+            reply.Status.AddRange(statuses);
+            return reply;
+        }
 
-//        public async Task<StatusModel?> GetStatusByNameAsync(string statusName)
-//        {
-//            var entity = await _statusRepository.GetByNameAsync(statusName);
-//            if (entity == null) return null;
 
-//            return new StatusModel
-//            {
-//                StatusId = entity.StatusId,
-//                StatusName = entity.StatusName
-//            };
-//        }
-//    }
-//}
+        //public async Task<StatusModel?> GetStatusByIdAsync(string id)
+        //{
+        //    var entity = await _statusRepository.GetByIdAsync(id);
+        //    if (entity == null) return null;
+
+        //    return new StatusModel
+        //    {
+        //        StatusId = entity.StatusId,
+        //        StatusName = entity.StatusName
+        //    };
+        //}
+
+        //public async Task<StatusModel?> GetStatusByNameAsync(string statusName)
+        //{
+        //    var entity = await _statusRepository.GetByNameAsync(statusName);
+        //    if (entity == null) return null;
+
+        //    return new StatusModel
+        //    {
+        //        StatusId = entity.StatusId,
+        //        StatusName = entity.StatusName
+        //    };
+        //}
+    }
+}

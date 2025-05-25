@@ -101,44 +101,41 @@ public class EventService(IEventRepository eventRepository) : EventProto.EventPr
         reply.Events.AddRange(events);
         return reply;
     }
-
     public override async Task<EventReply> CreateEvent(Event request, ServerCallContext context)
     {
         var entity = EventFactory.ToEntity(request);
         var result = await _eventRepository.AddAsync(entity);
 
         if (!result)
-            return new EventReply { StatusCode = 500, Message = "Not created" };
+            return new EventReply { StatusCode = 500, Message = "Failed to create the event." };
 
-        return new EventReply { StatusCode = 200, Message = "Created" };
+        return new EventReply { StatusCode = 200, Message = "Event created successfully." };
     }
 
     public override async Task<EventReply> UpdateEvent(Event request, ServerCallContext context)
     {
-
         var entity = EventFactory.ToEntity(request);
         var result = await _eventRepository.UpdateAsync(entity);
+
         if (!result)
             return new EventReply
             {
                 StatusCode = 500,
-                Message = "not OK"
-
+                Message = "Failed to update the event."
             };
 
-        return new EventReply { StatusCode = 200, Message = "ok" };
+        return new EventReply { StatusCode = 200, Message = "Event updated successfully." };
     }
 
     public override async Task<EventReply> DeleteEvent(GetEventByIdRequest request, ServerCallContext context)
     {
-        var result = await _eventRepository.DeleteAsync
-            (x => x.EventId == request.EventId);
+        var result = await _eventRepository.DeleteAsync(x => x.EventId == request.EventId);
 
         if (!result)
+            return new EventReply { StatusCode = 500, Message = "Failed to delete the event." };
 
-            return new EventReply { StatusCode = 500, Message = "not OK" };
-
-        return new EventReply { StatusCode = 200, Message = "ok" };
+        return new EventReply { StatusCode = 200, Message = "Event deleted successfully." };
     }
+
 
 }
