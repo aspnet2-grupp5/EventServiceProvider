@@ -1,6 +1,6 @@
 ﻿namespace EventApi.Models
 {
-    public class Event
+    public class EventModel
     {
         public string EventId { get; set; } = null!;
         public string EventTitle { get; set; } = null!;
@@ -13,8 +13,8 @@
         public string CategoryName { get; set; } = null!;
         public string LocationName { get; set; } = null!;
         public string StatusName { get; set; } = null!;
-        public Category? Category { get; internal set; }
-        public Location? Location { get; internal set; }
-        public Status? Status { get; internal set; }
+        public CategoryModel? Category { get; internal set; }
+        public LocationModel? Location { get; internal set; }
+        public StatusModel? Status { get; internal set; }
     }
 }

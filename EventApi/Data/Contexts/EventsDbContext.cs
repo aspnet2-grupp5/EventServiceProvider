@@ -9,8 +9,6 @@ namespace EventApi.Data.Contexts
         public DbSet<CategoryEntity> Categories { get; set; }
         public DbSet<LocationEntity> Locations { get; set; }
         public DbSet<StatusEntity> Statuses { get; set; }
-        public DbSet<MemberEntity> Members { get; set; }
-        public DbSet<AdminEntity> Admins { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

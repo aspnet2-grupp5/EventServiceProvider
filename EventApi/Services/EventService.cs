@@ -1,80 +1,144 @@
 ﻿using EventApi.Factories;
-using EventApi.Models;
+using EventApi.Protos;
 using EventApi.Repositories;
+using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 
 public interface IEventService
 {
-    Task<IEnumerable<Event>> GetAllEventsAsync();
-    Task<Event?> GetByIdAsync(string id);
-    Task<IEnumerable<Event>> GetByCategoryIdAsync(string categoryId);
-    Task<IEnumerable<Event>> GetByLocationIdAsync(string locationId);
-    Task<IEnumerable<Event>> GetEventsByStatusNameAsync(string statusName);
-    Task <bool> AddAsync(AddEventFormData formData);
-    Task<bool> UpdateAsync(EditEventformData formData);
-    Task<bool> DeleteByIdAsync(string id);
+    Task<EventReply> CreateEvent(Event request, ServerCallContext context);
+    Task<EventReply> DeleteEvent(GetEventByIdRequest request, ServerCallContext context);
+    Task<GetAllEventsReply> GetAllEvents(Empty request, ServerCallContext context);
+    Task<GetEventByIdReply> GetEventById(GetEventByIdRequest request, ServerCallContext context);
+    Task<GetAllEventsReply> GetEventsByCategory(CategoryIdRequest request, ServerCallContext context);
+    Task<GetAllEventsReply> GetEventsByLocation(LocationIdRequest request, ServerCallContext context);
+    Task<GetAllEventsReply> GetEventsByStatus(StatusIdRequest request, ServerCallContext context);
+    Task<EventReply> UpdateEvent(Event request, ServerCallContext context);
 }
-public class EventService(IEventRepository eventRepository) : IEventService
+public class EventService(IEventRepository eventRepository) : EventProto.EventProtoBase, IEventService
 {
     private readonly IEventRepository _eventRepository = eventRepository;
 
-    public async Task<IEnumerable<Event>> GetAllEventsAsync()
+    public override async Task<GetAllEventsReply> GetAllEvents(Empty request, ServerCallContext context)
     {
-        var entities = await _eventRepository.GetAllEventsAsync();
+        var entities = await _eventRepository.GetAllAsync(
+            orderByDescending: false,
+            sortBy: x => x.Date,
+            filterBy: null,
+            i => i.Category,
+            i => i.Status,
+            i => i.Location);
+
         var events = entities.Select(EventFactory.ToModel).ToList();
-        return events;
+        var reply = new GetAllEventsReply();
+        reply.Events.AddRange(events);
+        return reply;
     }
 
-    public async Task<Event?> GetByIdAsync(string id)
+    public override async Task<GetEventByIdReply> GetEventById(GetEventByIdRequest request, ServerCallContext context)
     {
-        var entity = await _eventRepository.GetByIdAsync(id);
-        return EventFactory.ToModel(entity);
+        var entity = await _eventRepository.GetAsync(x => x.EventId == request.EventId,
+            i => i.Category,
+            i => i.Status,
+            i => i.Location);
+        if (entity == null)
+        {
+            return new GetEventByIdReply
+            {
+                StatusCode = 404,
+            };
+        }
+        return new GetEventByIdReply
+        {
+            StatusCode = 200,
+            Event = EventFactory.ToModel(entity)
+        };
     }
 
-    public async Task<IEnumerable<Event>> GetByCategoryIdAsync(string categoryId)
+    public override async Task<GetAllEventsReply> GetEventsByCategory(CategoryIdRequest request, ServerCallContext context)
     {
-        var entities = await _eventRepository.GetByCategoryIdAsync(categoryId);
-        return entities.Select(EventFactory.ToModel);
+        var entities = await _eventRepository.GetAllAsync(
+            orderByDescending: false,
+            sortBy: x => x.Date,
+            filterBy: x => x.Category.CategoryId == request.CategoryId,
+            i => i.Category,
+            i => i.Status,
+            i => i.Location);
+
+        var events = entities.Select(EventFactory.ToModel).ToList();
+        var reply = new GetAllEventsReply();
+        reply.Events.AddRange(events);
+        return reply;
     }
 
-    public async Task<IEnumerable<Event>> GetByLocationIdAsync(string locationId)
+    public override async Task<GetAllEventsReply> GetEventsByLocation(LocationIdRequest request, ServerCallContext context)
     {
-        var entities = await _eventRepository.GetByLocationIdAsync(locationId);
-        return entities.Select(EventFactory.ToModel);
+        var entities = await _eventRepository.GetAllAsync(
+            orderByDescending: false,
+            sortBy: x => x.Date,
+            filterBy: x => x.Location.LocationId == request.LocationId,
+            i => i.Category,
+            i => i.Status,
+            i => i.Location);
+
+        var events = entities.Select(EventFactory.ToModel).ToList();
+        var reply = new GetAllEventsReply();
+        reply.Events.AddRange(events);
+        return reply;
     }
 
-    public async Task<IEnumerable<Event>> GetEventsByStatusNameAsync(string statusName)
+    public override async Task<GetAllEventsReply> GetEventsByStatus(StatusIdRequest request, ServerCallContext context)
     {
-        var entities = await _eventRepository.GetByStatusNameAsync(statusName);
-        return entities.Select(EventFactory.ToModel);
+        var entities = await _eventRepository.GetAllAsync(
+            orderByDescending: false,
+            sortBy: x => x.Date,
+            filterBy: x => x.Status.StatusId == request.StatusId,
+            i => i.Category,
+            i => i.Status,
+            i => i.Location);
+        var events = entities.Select(EventFactory.ToModel).ToList();
+        var reply = new GetAllEventsReply();
+        reply.Events.AddRange(events);
+        return reply;
     }
 
-    public async Task<bool> AddAsync(AddEventFormData formData)
+    public override async Task<EventReply> CreateEvent(Event request, ServerCallContext context)
     {
-        if (formData == null)
-            return false;
+        var entity = EventFactory.ToEntity(request);
+        var result = await _eventRepository.AddAsync(entity);
 
-        var eventEntity = EventFactory.ToEntity(formData);
-        await _eventRepository.AddAsync(eventEntity); 
-        return true; 
+        if (!result)
+            return new EventReply { StatusCode = 500, Message = "Not created" };
+
+        return new EventReply { StatusCode = 200, Message = "Created" };
     }
 
-    public async Task<bool> UpdateAsync(EditEventformData formData)
+    public override async Task<EventReply> UpdateEvent(Event request, ServerCallContext context)
     {
-        if (formData == null)
-            return false;
 
-        var entity = EventFactory.ToEntity(formData);
-        await _eventRepository.UpdateAsync(entity);
-        return true; 
+        var entity = EventFactory.ToEntity(request);
+        var result = await _eventRepository.UpdateAsync(entity);
+        if (!result)
+            return new EventReply
+            {
+                StatusCode = 500,
+                Message = "not OK"
+
+            };
+
+        return new EventReply { StatusCode = 200, Message = "ok" };
     }
 
-    public async Task <bool> DeleteByIdAsync(string id)
+    public override async Task<EventReply> DeleteEvent(GetEventByIdRequest request, ServerCallContext context)
     {
-        if (string.IsNullOrEmpty(id))
-            return false;
+        var result = await _eventRepository.DeleteAsync
+            (x => x.EventId == request.EventId);
 
-        await _eventRepository.DeleteByIdAsync(id);
-        return true;
+        if (!result)
+
+            return new EventReply { StatusCode = 500, Message = "not OK" };
+
+        return new EventReply { StatusCode = 200, Message = "ok" };
     }
- 
+
 }

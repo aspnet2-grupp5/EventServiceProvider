@@ -10,6 +10,7 @@ namespace EventApi.Data.Entities
         [Required]
 
         public string Address { get; set; } = null!;
+        public string City { get; set; } = null!;
 
         public ICollection<EventEntity> Events { get; set; } = new List<EventEntity>();
     }

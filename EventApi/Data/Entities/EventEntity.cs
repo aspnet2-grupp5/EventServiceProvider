@@ -1,5 +1,4 @@
-﻿using EventApi.Data.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EventApi.Data.Entities
@@ -11,10 +10,11 @@ namespace EventApi.Data.Entities
 
         [Required]
         public string EventTitle { get; set; } = null!;
+        public string? Image {  get; set; } 
 
         public string Description { get; set; } = null!;
 
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         [Column(TypeName = "money")]
         public decimal? Price { get; set; }
@@ -23,13 +23,13 @@ namespace EventApi.Data.Entities
         public int? SoldQuantity { get; set; }
 
         [ForeignKey(nameof(Category))]
-        public string CategoryId { get; set; } = null!;
-        public virtual CategoryEntity Category { get; set; } = null!;
+        public string? CategoryId { get; set; } 
+        public  CategoryEntity? Category { get; set; }
         [ForeignKey(nameof(Location))]
-        public string LocationId { get; set; } =null!;
-        public virtual LocationEntity Location { get; set; } = null!;
+        public string? LocationId { get; set; } 
+        public  LocationEntity? Location { get; set; } 
         [ForeignKey(nameof(Status))]
         public string? StatusId { get; set; }
-        public virtual StatusEntity Status { get; set; } = null!;
+        public StatusEntity? Status { get; set; } 
     }
 }

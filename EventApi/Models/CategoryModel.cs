@@ -2,7 +2,7 @@
 
 namespace EventApi.Models
 {
-    public class Category
+    public class CategoryModel
     {
         [Required]
         public string CategoryId { get; set; } = null!;

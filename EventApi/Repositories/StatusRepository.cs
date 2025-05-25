@@ -4,27 +4,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventApi.Repositories
 {
-    public interface IStatusRepository
+    public interface IStatusRepository : IBaseRepository<StatusEntity>
     {
-        Task<IEnumerable<StatusEntity>> GetAllAsync();
         Task<StatusEntity?> GetByIdAsync(string id);
         Task<StatusEntity?> GetByNameAsync(string name);
     }
 
-    public class StatusRepository : IStatusRepository
+    public class StatusRepository : BaseRepository<StatusEntity>, IStatusRepository
     {
         private readonly EventsDbContext _context;
         private readonly DbSet<StatusEntity> _dbSet;
 
-        public StatusRepository(EventsDbContext context)
+        public StatusRepository(EventsDbContext context) : base(context)
         {
             _context = context;
             _dbSet = _context.Set<StatusEntity>();
-        }
-
-        public async Task<IEnumerable<StatusEntity>> GetAllAsync()
-        {
-            return await _dbSet.ToListAsync();
         }
 
         public async Task<StatusEntity?> GetByIdAsync(string id)

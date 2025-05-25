@@ -2,7 +2,7 @@
 
 namespace EventApi.Models
 {
-    public class Location
+    public class LocationModel
     {
         [Required]
         public string LocationId { get; set; } = null!;

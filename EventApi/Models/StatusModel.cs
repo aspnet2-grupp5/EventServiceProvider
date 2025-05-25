@@ -2,7 +2,7 @@
 
 namespace EventApi.Models
 {
-    public class Status
+    public class StatusModel
     {
         public string? StatusId { get; set; } 
         

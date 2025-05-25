@@ -6,12 +6,12 @@ namespace EventApi.Repositories
 {
     public interface IBaseRepository<TEntity> where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAllAsync();
-        Task<TEntity?> GetByIdAsync(string id);
-        Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate);
         Task<bool> AddAsync(TEntity entity);
         Task<bool> UpdateAsync(TEntity entity);
-        Task<bool> DeleteByIdAsync(Expression<Func<TEntity, bool>> expression);
+        Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> expression);
+        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression);
+        Task<IEnumerable<TEntity>> GetAllAsync(bool orderByDescending = false, Expression<Func<TEntity, object?>>? sortBy = null, Expression<Func<TEntity, bool>>? filterBy = null, params Expression<Func<TEntity, object?>>[] includes);
+        Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> findBy, params Expression<Func<TEntity, object?>>[] includes);
     }
 
     public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
@@ -23,18 +23,6 @@ namespace EventApi.Repositories
             _context = context;
             _dbSet = _context.Set<TEntity>();
         }
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
-        {
-            return await _dbSet.ToListAsync();
-        }
-        public virtual async Task<TEntity?> GetByIdAsync(string id)
-        {
-            return await _dbSet.FindAsync(id);
-        }
-        public virtual async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await _dbSet.Where(predicate).ToListAsync();
-        }
         public virtual async Task<bool> AddAsync(TEntity entity)
         {
             if (entity == null)
@@ -44,6 +32,7 @@ namespace EventApi.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
         public virtual async Task<bool> UpdateAsync(TEntity entity)
         {
             if (entity == null)
@@ -53,7 +42,8 @@ namespace EventApi.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
-        public virtual async Task<bool> DeleteByIdAsync(Expression<Func<TEntity, bool>> expression)
+
+        public virtual async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> expression)
         {
             var entity = await _dbSet.FirstOrDefaultAsync(expression);
             if (entity == null)
@@ -63,6 +53,38 @@ namespace EventApi.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            return await _dbSet.AnyAsync(expression);
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(bool orderByDescending = false, Expression<Func<TEntity, object?>>? sortBy = null, Expression<Func<TEntity, bool>>? filterBy = null, params Expression<Func<TEntity, object?>>[] includes)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            if (filterBy != null)
+                query = query.Where(filterBy);
+
+            if (includes != null && includes.Length > 0)
+                foreach (var include in includes)
+                    query = query.Include(include);
+
+            if (sortBy != null)
+                query = orderByDescending ? query.OrderByDescending(sortBy) : query.OrderBy(sortBy);
+
+            return await query.ToListAsync();
+        }
+
+        public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> findBy, params Expression<Func<TEntity, object?>>[] includes)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            if (includes != null && includes.Length > 0)
+                foreach (var include in includes)
+                    query = query.Include(include);
+
+            return await query.FirstOrDefaultAsync(findBy) ?? null!;
+        }
     }
 }
-
