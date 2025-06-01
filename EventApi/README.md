@@ -13,26 +13,26 @@ This project implements a gRPC-based Event Management System in C#/.NET. It prov
 
 ### EventService
 
-- `AddEventForm(EventFormRequest)`: Adds a new event.
+- `CreateEvent(EventRequest)`: Adds a new event.
 - `GetAllEvents(Empty)`: Returns all events.
-- `GetEventById(EventIdRequest)`: Returns a specific event.
-- `UpdateEventForm(UpdateEventFormRequest)`: Updates an existing event.
-- `DeleteEvent(EventIdRequest)`: Deletes an event by ID.
+- `GetEventById(GetEventByIdRequest)`: Returns a specific event.
+- `UpdateEvent(EventRequest)`: Updates an existing event.
+- `DeleteEvent(GetEventByIdRequest)`: Deletes an event by ID.
 
 ### CategoryService
 
 - `GetAllCategories(Empty)`: Returns all categories.
-- `GetCategory(CategoryRequest)`: Returns a category by ID.
+- `GetCategory(CategoryIdRequest)`: Returns a category by ID.
 
 ### LocationService
 
 - `GetAllLocations(Empty)`: Returns all locations.
-- `GetLocation(LocationRequest)`: Returns a location by ID.
+- `GetLocation(LocationIdRequest)`: Returns a location by ID.
 
 ### StatusService
 
 - `GetAllStatuses(Empty)`: Returns all statuses.
-- `GetStatus(StatusRequest)`: Returns a status by ID.
+- `GetStatus(StatusIdRequest)`: Returns a status by ID.
 
 ## 📄 Proto Files
 
@@ -49,7 +49,7 @@ package event;
 
 import "google/protobuf/timestamp.proto";
 
-message EventFormRequest {
+message Event {
   string EventId = 1;
   string EventTitle = 2;
   string EventImage = 3;
