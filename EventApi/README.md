@@ -94,13 +94,13 @@ Use the `GrpcServiceClient` or any gRPC client (e.g., [BloomRPC](https://github.
 
 ```json
 {
-  "EventTitle = "Sample Event",
-   "Description = "This is a sample event description.",
+  "EventTitle = Sample Event",
+   "Description = This is a sample event description.",
    "Date = DateTime.UtcNow.AddDays(30)",
    "Price = 50.00m",
    "Quantity = 100",
-   "CategoryName = "Health",
-   "Address = "Solnavägen 5B",
+   "CategoryName = Health",
+   "Address = Solnavägen 5B",
    "StatusName = "Past",
 }
 ```
@@ -200,12 +200,11 @@ MIT License (or your chosen license).
 
 ## Activity Diagram
  Create an Event
-![image](https://github.com/user-attachments/assets/719db538-ddad-443b-8d3f-a06f48c3de6e)
-
-
+![Create an Event](https://user-images.githubusercontent.com/12345678/123456789-abcdef1234567890.png)
 ```
 
 ## Sequence Diagram
 Create an Event
 ![image](https://github.com/user-attachments/assets/7edbe458-1c2f-4550-8319-08962ab979d0)
+
 
