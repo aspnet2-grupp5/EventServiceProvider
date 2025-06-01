@@ -58,7 +58,6 @@ namespace EventApi.Repositories
         {
             return await _dbSet.AnyAsync(expression);
         }
-
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync(bool orderByDescending = false, Expression<Func<TEntity, object?>>? sortBy = null, Expression<Func<TEntity, bool>>? filterBy = null, params Expression<Func<TEntity, object?>>[] includes)
         {
             IQueryable<TEntity> query = _dbSet;

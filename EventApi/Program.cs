@@ -1,4 +1,5 @@
 using EventApi.Data.Contexts;
+using EventApi.Handlers;
 using EventApi.Repositories;
 using EventApi.Services;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,10 @@ builder.Services.AddDbContext<EventsDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddGrpc();
+builder.Services.AddMemoryCache();
+
+builder.Services. AddScoped(typeof(ICacheHandler<>), typeof(CacheHandler<>));
+
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IStatusRepository, StatusRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

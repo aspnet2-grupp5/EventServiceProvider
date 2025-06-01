@@ -20,12 +20,10 @@ namespace EventApi.Repositories
             _context = context;
             _dbSet = _context.Set<StatusEntity>();
         }
-
         public async Task<StatusEntity?> GetByIdAsync(string id)
         {
             return await _dbSet.FirstOrDefaultAsync(s => s.StatusId == id);
         }
-
         public async Task<StatusEntity?> GetByNameAsync(string name)
         {
             return await _dbSet.FirstOrDefaultAsync(s => s.StatusName.ToLower() == name.ToLower());
