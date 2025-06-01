@@ -205,10 +205,14 @@ MIT License (or your chosen license).
 1. **Find the .proto files** in the `Protos/` directory.
 2. **Generate client/server code** using the proto files in your language of choice.
 3. **Use a gRPC client** (e.g., [grpcurl](https://github.com/fullstorydev/grpcurl), [BloomRPC](https://github.com/bloomrpc/bloomrpc), or your own code) to interact with the API.
+```
 
 ## 📊 Activity Diagram  
 **Create an Event**  
 ![Create an Event]![Activity Diagram](https://github.com/user-attachments/assets/c95d59c3-4066-48ff-97bb-688f9eb5ef26)
+![image](https://github.com/user-attachments/assets/b84cd656-5f5e-4563-9938-2890cea523e5)
+
+
 ```
 
 ## 📈 Sequence Diagram  
