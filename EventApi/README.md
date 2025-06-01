@@ -210,9 +210,6 @@ MIT License (or your chosen license).
 ## 📊 Activity Diagram  
 **Create an Event**  
 ![Create an Event]![Activity Diagram](https://github.com/user-attachments/assets/c95d59c3-4066-48ff-97bb-688f9eb5ef26)
-![image](https://github.com/user-attachments/assets/b84cd656-5f5e-4563-9938-2890cea523e5)
-
-
 ```
 
 ## 📈 Sequence Diagram  
