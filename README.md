@@ -3,3 +3,6 @@
 
 
 ![image](https://github.com/user-attachments/assets/7edbe458-1c2f-4550-8319-08962ab979d0)
+
+
+![Swagger UI Screenshot](docs/swagger-ui.png)
