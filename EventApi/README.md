@@ -1,86 +1,207 @@
-﻿# EventApi
+# Event Management gRPC System
 
-A modern .NET 9 gRPC backend for managing events, categories, locations, and statuses.  
-This project is designed for high performance, strong typing, and easy integration with various clients.
+This project implements a gRPC-based Event Management System in C#/.NET. It provides a backend service with proto definitions for managing Events, Categories, Locations, and Statuses.
 
----
+## 🧩 Project Structure
 
-## Table of Contents
+- **GrpcServiceServer/**: gRPC server implementation.
+- **GrpcServiceClient/**: Console app client (optional UI).
+- **Protos/**: `.proto` definitions for all services and messages.
+- **README.md**: Documentation.
 
-- [Overview](#overview)
-- [Subsystems](#subsystems)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [gRPC API Documentation](#grpc-api-documentation)
-- [How to Test](#how-to-test)
-- [Diagrams](#diagrams)
-- [License](#license)
+## 📦 Services Overview
 
----
+### EventService
 
-## Overview
+- `AddEventForm(EventFormRequest)`: Adds a new event.
+- `GetAllEvents(Empty)`: Returns all events.
+- `GetEventById(EventIdRequest)`: Returns a specific event.
+- `UpdateEventForm(UpdateEventFormRequest)`: Updates an existing event.
+- `DeleteEvent(EventIdRequest)`: Deletes an event by ID.
 
-EventApi is a backend service for event management, built with C# 13 and .NET 9, using gRPC for all communication.  
-It supports CRUD operations for events, categories, locations, and statuses, and is optimized for integration with web, mobile, or desktop clients.
+### CategoryService
 
----
+- `GetAllCategories(Empty)`: Returns all categories.
+- `GetCategory(CategoryRequest)`: Returns a category by ID.
 
-## Subsystems
+### LocationService
 
-- **Events**: Create, update, delete, and list events.
-- **Categories**: Manage event categories.
-- **Locations**: Manage event locations.
-- **Statuses**: Manage event statuses (e.g., Active, Past, Draft).
+- `GetAllLocations(Empty)`: Returns all locations.
+- `GetLocation(LocationRequest)`: Returns a location by ID.
 
-Each subsystem is implemented as a gRPC service, defined in the `Protos/` directory.
+### StatusService
 
----
+- `GetAllStatuses(Empty)`: Returns all statuses.
+- `GetStatus(StatusRequest)`: Returns a status by ID.
 
-## Project Structure
-EventApi/ ├── Controllers/         # (REST controllers, if any, are currently commented out) ├── Data/                # Entity models and DbContext ├── Documentation/       # Example data for documentation/testing ├── Factories/           # Mapping between entities and gRPC models ├── Handlers/            # Caching and other handlers ├── Migrations/          # EF Core migrations ├── Models/              # Data transfer models ├── Protos/              # .proto files (gRPC service definitions) ├── Repositories/        # Data access logic ├── Services/            # gRPC service implementations ├── Program.cs           # Application entry point └── EventApi.csproj      # Project file
+## 📄 Proto Files
 
----
+All `.proto` files are located in the `Protos/` folder and compiled using `Grpc.Tools`.
 
-## License
+### Sample: Event.proto
 
-MIT License. See [LICENSE](LICENSE) for details.
+```proto
+syntax = "proto3";
 
----
+option csharp_namespace = "GrpcServiceServer.Protos";
+
+package event;
+
+import "google/protobuf/timestamp.proto";
+
+message EventFormRequest {
+  string EventId = 1;
+  string EventTitle = 2;
+  string EventImage = 3;
+  string Description = 4;
+  google.protobuf.Timestamp Date = 5;
+  double Price = 6;
+  int32 Quantity = 7;
+  int32 SoldQuantity = 8;
+  Category Category = 9;
+  Location Location = 10;
+  Status Status = 11;
+}
+```
+
+## 🏗️ How to Build & Run
+
+### Requirements
+
+- [.NET 7+ SDK](https://dotnet.microsoft.com/en-us/download)
+- Visual Studio 2022 or newer (or `dotnet CLI`)
+
+### Build Steps
+
+```bash
+git clone <repo-url>
+cd GrpcServiceServer
+dotnet build
+dotnet run
+```
+
+### Client Usage
+
+Use the `GrpcServiceClient` or any gRPC client (e.g., [BloomRPC](https://github.com/bloomrpc/bloomrpc)) to test.
+
+## 📨 Example Requests & Responses
+
+### EventService
+
+#### AddEventForm
+
+**Request:**
+
+```json
+{
+  "EventTitle = "Sample Event",
+   Description = "This is a sample event description.",
+   Date = DateTime.UtcNow.AddDays(30),
+   Price = 50.00m,
+   Quantity = 100,
+   CategoryName = "Health",
+   Address = "Solnavägen 5B",
+   StatusName = "Past",
+}
+```
+
+**Response:**
+
+```json
+{
+  "status_code": 200,
+  "message": "Event successfully created"
+}
+```
+
+### CategoryService
+
+#### GetCategory
+
+**Request:**
+
+```json
+{
+  "categoryId": 1
+}
+```
+
+**Response:**
+
+```json
+{
+  "categoryId": 1,
+  "categoryName": "Music"
+}
+```
+
+### LocationService
+
+#### GetLocation
+
+**Request:**
+
+```json
+{
+  "locationId": 2
+}
+```
+
+**Response:**
+
+```json
+{
+  "locationId": 2,
+  "address": "123 Main St",
+  "city": " Tech City"
+}
+```
+
+### StatusService
+
+#### GetStatus
+
+**Request:**
+
+```json
+{
+  "statusId": 1
+}
+```
+
+**Response:**
+
+```json
+{
+  "statusId": 1,
+  "statusName": "Active"
+}
+```
+
+## ✅ Features
+
+- Add, update, delete, and retrieve events.
+- Lookup for categories, locations, and statuses.
+- Strongly-typed messages via gRPC.
+- Timestamp support.
+
+
+## 📄 License
+
+MIT License (or your chosen license).
+
 
 ## Notes
 
 - This project uses gRPC only. There is no REST API.
 - For API details, always refer to the `.proto` files.
 - Example data for testing can be found in the `Documentation/` folder.
+```
 
-
-
+## Activity Diagram
 ![image](https://github.com/user-attachments/assets/b84cd656-5f5e-4563-9938-2890cea523e5)
+```
 
-
-
+## Sequence Diagram
 ![image](https://github.com/user-attachments/assets/7edbe458-1c2f-4550-8319-08962ab979d0)
 
-
-# gRPC API Documentation
-
-This project uses **gRPC** for all API communication. The API is defined in Protocol Buffer (`.proto`) files.
-
-## Subsystems
-
-- **Events**: Manage events (CRUD operations)
-- **Categories**: Manage event categories
-- **Statuses**: Manage event statuses
-- **Locations**: Manage event locations
-
-Each subsystem is represented by a gRPC service in the corresponding `.proto` file.
-
-## How to Use
-
-1. **Find the .proto files** in the `Protos/` directory.
-2. **Generate client/server code** using the proto files in your language of choice.
-3. **Use a gRPC client** (e.g., [grpcurl](https://github.com/fullstorydev/grpcurl), [BloomRPC](https://github.com/bloomrpc/bloomrpc), or your own code) to interact with the API.
-
-## Example: Event Service
-
-**Service definition:**
