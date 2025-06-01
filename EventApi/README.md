@@ -1,4 +1,4 @@
-﻿# Event Management gRPC System
+# Event Management gRPC System
 
 This project implements a gRPC-based Event Management System in C#/.NET. It provides a backend service with proto definitions for managing Events, Categories, Locations, and Statuses.
 
@@ -179,6 +179,10 @@ Use the `GrpcServiceClient` or any gRPC client (e.g., [BloomRPC](https://github.
 ```
 
 ## ✅ Features
+- Add, update, delete, and retrieve events.
+- Lookup for categories, locations, and statuses.
+- Strongly-typed messages via gRPC.
+- Timestamp support.
 
 - Add, update, delete, and retrieve events.
 - Lookup for categories, locations, and statuses.
@@ -198,6 +202,9 @@ MIT License (or your chosen license).
 - Example data for testing can be found in the `Documentation/` folder.
 ```
 
+1. **Find the .proto files** in the `Protos/` directory.
+2. **Generate client/server code** using the proto files in your language of choice.
+3. **Use a gRPC client** (e.g., [grpcurl](https://github.com/fullstorydev/grpcurl), [BloomRPC](https://github.com/bloomrpc/bloomrpc), or your own code) to interact with the API.
 
 ## 📊 Activity Diagram  
 **Create an Event**  
