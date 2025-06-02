@@ -1,6 +1,6 @@
 # Event Management gRPC System
 
-This project implements a gRPC-based Event Management System in C#/.NET. It provides a backend service with proto definitions for managing Events, Categories, Locations, and Statuses.
+This project implements a gRPC-based Event Management System in C#/.NET. It provides a backend service with `.proto` definitions for managing Events, Categories, Locations, and Statuses.
 
 ## 🧩 Project Structure
 
@@ -88,20 +88,20 @@ Use the `GrpcServiceClient` or any gRPC client (e.g., [BloomRPC](https://github.
 
 ### EventService
 
-#### AddEventForm
+#### CreateEvent
 
 **Request:**
 
 ```json
 {
-  "EventTitle = Sample Event",
-   "Description = This is a sample event description.",
-   "Date = DateTime.UtcNow.AddDays(30)",
-   "Price = 50.00m",
-   "Quantity = 100",
-   "CategoryName = Health",
-   "Address = Solnavägen 5B",
-   "StatusName = Past",
+  "eventTitle": "Sample Event",
+  "description": "This is a sample event description.",
+  "date": "2024-07-01T00:00:00Z",
+  "price": 50.00,
+  "quantity": 100,
+  "categoryName": "Health",
+  "address": "Solnavägen 5B",
+  "statusName": "Past"
 }
 ```
 
@@ -109,7 +109,7 @@ Use the `GrpcServiceClient` or any gRPC client (e.g., [BloomRPC](https://github.
 
 ```json
 {
-  "status_code": 200,
+  "statusCode": 200,
   "message": "Event successfully created"
 }
 ```
@@ -153,7 +153,7 @@ Use the `GrpcServiceClient` or any gRPC client (e.g., [BloomRPC](https://github.
 {
   "locationId": 2,
   "address": "123 Main St",
-  "city": " Tech City"
+  "city": "Tech City"
 }
 ```
 
@@ -179,40 +179,34 @@ Use the `GrpcServiceClient` or any gRPC client (e.g., [BloomRPC](https://github.
 ```
 
 ## ✅ Features
-- Add, update, delete, and retrieve events.
-- Lookup for categories, locations, and statuses.
-- Strongly-typed messages via gRPC.
-- Timestamp support.
 
 - Add, update, delete, and retrieve events.
 - Lookup for categories, locations, and statuses.
 - Strongly-typed messages via gRPC.
 - Timestamp support.
-
 
 ## 📄 License
 
 MIT License (or your chosen license).
 
-
 ## Notes
 
 - This project uses gRPC only. There is no REST API.
-- For API details, always refer to the `.proto` files.
-- Example data for testing can be found in the `Documentation/` folder.
-```
+- For API details, refer to the `.proto` files.
+- Example data for testing is located in the `Documentation/` folder.
 
-1. **Find the .proto files** in the `Protos/` directory.
+### Usage Instructions
+
+1. **Find the `.proto` files** in the `Protos/` directory.
 2. **Generate client/server code** using the proto files in your language of choice.
 3. **Use a gRPC client** (e.g., [grpcurl](https://github.com/fullstorydev/grpcurl), [BloomRPC](https://github.com/bloomrpc/bloomrpc), or your own code) to interact with the API.
-```
 
-## 📊 Activity Diagram  
+## 📊 Activity Diagram
+
 **Create an Event**  
 ![Activity Diagram](https://github.com/user-attachments/assets/c95d59c3-4066-48ff-97bb-688f9eb5ef26)
-```
 
-## 📈 Sequence Diagram  
-**Create an Event**
-![image](https://github.com/user-attachments/assets/7edbe458-1c2f-4550-8319-08962ab979d0)
-``` 
+## 📈 Sequence Diagram
+
+**Create an Event**  
+![Sequence Diagram](https://github.com/user-attachments/assets/7edbe458-1c2f-4550-8319-08962ab979d0)
